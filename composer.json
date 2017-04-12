@@ -23,14 +23,8 @@
 		"proxy:generate": [
 			"./vendor/doctrine/orm/bin/doctrine orm:generate-proxies"
 		],
-		"doctrine:is-ready": [
-			"./vendor/doctrine/orm/bin/doctrine orm:ensure-production-settings"
-		],
-		"doctrine:generate-entities": [
-			"./vendor/doctrine/orm/bin/doctrine orm:generate-entities ./app/src/ --generate-annotations=true"
-		],
 		"bd:generate-entities": [
-			"./vendor/doctrine/orm/bin/doctrine orm:convert-mapping --namespace='App\\Entity\\' --force --from-database annotation ./app/src"
+			"./vendor/doctrine/orm/bin/doctrine orm:convert-mapping --namespace='entity\\' --force --from-database annotation ./app/src"
 		]
 	}
 }
