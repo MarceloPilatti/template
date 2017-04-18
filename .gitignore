@@ -1,1 +1,11 @@
+nbproject
+._*
+.~lock.*
+config/autoload/doctrine_orm.local.php
+config/autoload/global.php
+data/DoctrineORMModule
+composer.lock
 /vendor/
+.settings/
+*~
+*.bak
