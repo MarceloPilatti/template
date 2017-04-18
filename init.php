@@ -12,6 +12,13 @@ date_default_timezone_set( 'America/Sao_Paulo' );
 
 set_time_limit( 60 );
 
+define("HOST", "smtp.gmail.com");
+define("PORT", "587");
+define("TLS", true);
+define("EMAIL", "marcelo.silva979@gmail.com");
+define("PASSWORD", "753159mp");
+define("NAME", "Marcelo Pilatti");
+
 $path=__DIR__.'/entity';
 $proxyDir=__DIR__.'/data/DoctrineORMModule/Proxy';
 $isDevMode = true;

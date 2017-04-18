@@ -1,4 +1,155 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [QSA,L]
+AddOutPutFilterByType DEFLATE text/html text/plain text/xml image/jpeg
+AddHandler application/x-httpd-php70 .php .php5 .php4 .php3
+<IfModule mod_deflate.c>
+    SetOutputFilter DEFLATE
+    ServerSignature Off
+    RewriteCond %{HTTP_HOST} !=template
+    #RewriteCond %{HTTP_HOST} !^www\.
+    #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+    <IfModule mod_setenvif.c>
+        # Netscape 4.x has some problems...
+        BrowserMatch ^Mozilla/4 gzip-only-text/html
+        
+        # Netscape 4.06-4.08 have some more problems
+        BrowserMatch ^Mozilla/4\.0[678] no-gzip
+        
+        # MSIE masquerades as Netscape, but it is fine
+        # BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+        
+        # NOTE: Due to a bug in mod_setenvif up to Apache 2.0.48
+        # the above regex won't work. You can use the following
+        # workaround to get the desired effect:
+        BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+        
+        # Don't compress images
+       SetEnvIfNoCase Request_URI .(?:gif|jpe?g|png)$ no-gzip dont-vary
+    </IfModule>
+    
+    <IfModule mod_headers.c>
+        # Make sure proxies don't deliver the wrong content
+        Header append Vary User-Agent env=!dont-vary
+		# Set XSS Protection header
+		Header set X-XSS-Protection "1; mode=block"
+    </IfModule>
+	<IfModule mod_expires.c>
+		ExpiresActive on
+		ExpiresDefault                          "access plus 1 month"
+		ExpiresByType text/cache-manifest       "access plus 0 seconds"
+
+		# Html
+		ExpiresByType text/html                 "access plus 0 seconds"
+
+		# Data
+		ExpiresByType text/xml                  "access plus 0 seconds"
+		ExpiresByType application/xml           "access plus 0 seconds"
+		ExpiresByType application/json          "access plus 0 seconds"
+
+		# Feed
+		ExpiresByType application/rss+xml       "access plus 1 hour"
+		ExpiresByType application/atom+xml      "access plus 1 hour"
+
+		# Favicon
+		ExpiresByType image/x-icon              "access plus 1 week"
+
+		# Media: images, video, audio
+		ExpiresByType image/gif                 "access plus 1 month"
+		ExpiresByType image/png                 "access plus 1 month"
+		ExpiresByType image/jpg                 "access plus 1 month"
+		ExpiresByType image/jpeg                "access plus 1 month"
+		ExpiresByType video/ogg                 "access plus 1 month"
+		ExpiresByType audio/ogg                 "access plus 1 month"
+		ExpiresByType video/mp4                 "access plus 1 month"
+		ExpiresByType video/webm                "access plus 1 month"
+
+		# HTC files
+		ExpiresByType text/x-component          "access plus 1 month"
+
+		# Webfonts
+		ExpiresByType application/x-font-ttf    "access plus 1 month"
+		ExpiresByType font/opentype             "access plus 1 month"
+		ExpiresByType application/x-font-woff   "access plus 1 month"
+		ExpiresByType image/svg+xml             "access plus 1 month"
+		ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+
+		# CSS / JS
+		ExpiresByType text/css                  "access plus 1 year"
+		ExpiresByType application/javascript    "access plus 1 year"
+    </IfModule>
+    <IfModule mod_autoindex.c>
+    	Options -Indexes
+    </IfModule>
+    <IfModule mod_deflate.c>
+		<IfModule mod_setenvif.c>
+        	<IfModule mod_headers.c>
+	            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+        	    RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+	        </IfModule>
+		</IfModule>
+		<IfModule filter_module>
+		<IfVersion >= 2.4>
+	            FilterDeclare  COMPRESS
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/html|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/css|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/plain|"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/xml|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/x-component|"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/javascript|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/json|"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/xml|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/xhtml+xml|"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/rss+xml|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/atom+xml|"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/vnd.ms-fontobject|"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} = 'image/svg+xml'"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} = 'image/x-icon'"
+	            FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} = 'application/x-font-ttf'"
+        	    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} = 'font/opentype'"
+	            FilterChain    COMPRESS
+        	    FilterProtocol COMPRESS DEFLATE change=yes;byteranges=no
+	        </IfVersion>
+        	<IfVersion < 2.4>
+	            FilterDeclare   COMPRESS
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/html
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/css
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/plain
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/xml
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/x-component
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/javascript
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/json
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xml
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xhtml+xml
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/rss+xml
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/atom+xml
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/vnd.ms-fontobject
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/svg+xml
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/x-icon
+	            FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/x-font-ttf
+        	    FilterProvider  COMPRESS  DEFLATE resp=Content-Type $font/opentype
+	            FilterChain     COMPRESS
+        	    FilterProtocol  COMPRESS  DEFLATE change=yes;byteranges=no
+	        </IfVersion>
+	    	</IfModule>
+		<IfModule !mod_filter.c>
+	        AddOutputFilterByType DEFLATE text/html text/plain text/css application/json
+        	AddOutputFilterByType DEFLATE application/javascript
+        	AddOutputFilterByType DEFLATE text/xml application/xml text/x-component
+	        AddOutputFilterByType DEFLATE application/xhtml+xml application/rss+xml application/atom+xml
+	        AddOutputFilterByType DEFLATE image/x-icon image/svg+xml application/vnd.ms-fontobject application/x-font-ttf font/opentype
+	        </IfModule>
+   	</IfModule>
+	<IfModule mod_rewrite.c>
+		RewriteEngine on
+		RewriteBase /
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME} !favicon.ico
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^ index.php [QSA,L]
+		<Files magic>
+		    AddType application/x-httpd-php70 .bop .foo .133t
+		</Files>
+	</IfModule>
+   	<IfModule mod_headers.c>
+   		Header unset ETag
+   	</IfModule>
+   	FileETag None
+</IfModule>
