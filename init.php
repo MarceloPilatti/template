@@ -1,32 +1,30 @@
 <?php
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
-require_once 'vendor/autoload.php';
+if (file_exists('vendor/autoload.php')) require_once 'vendor/autoload.php';
+else echo "Vendor folder not found";
+
+spl_autoload_register(function($class) {
+	if(file_exists('app/controller/'.ucfirst($class).'.php')) require_once 'app/controller/'.ucfirst($class).'.php';
+	if(file_exists('lib/'.ucfirst($class).'.php')) require_once 'lib/'.ucfirst($class).'.php';
+});
 
 @ini_set("display_errors", 1);
 @ini_set("log_errors", 1);
 @ini_set("error_reporting", E_ALL);
-
 date_default_timezone_set( 'America/Sao_Paulo' );
+set_time_limit(60);
 
-set_time_limit( 60 );
-
-define("HOST", "smtp.gmail.com");
-define("PORT", "587");
-define("TLS", true);
-define("EMAIL", "marcelo.silva979@gmail.com");
-define("PASSWORD", "753159mp");
-define("NAME", "Marcelo Pilatti");
-
-$path=__DIR__.'/entity';
+$path=__DIR__.'app/model/entity';
 $proxyDir=__DIR__.'/data/DoctrineORMModule/Proxy';
-$isDevMode = true;
+if(getenv("APPLICATION_ENV") == 'development')$isDevMode=true;
+else $isDevMode=false;
 $dbParams=array (
-		'driver'=>'pdo_mysql',
-		'user'=>'root',
-		'password'=>'',
-		'host'=>'127.0.0.1',
-		'dbname'=>'');
+'driver'=>'pdo_mysql',
+'user'=>'root',
+'password'=>'090709',
+'host'=>'127.0.0.1',
+'dbname'=>'ADVOCACIA');
 $config=Setup::createAnnotationMetadataConfiguration(array($path),$isDevMode,$proxyDir,null,false);
 $entityManager=EntityManager::create($dbParams,$config);

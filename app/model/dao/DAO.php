@@ -1,5 +1,5 @@
 <?php
-namespace App\dao;
+namespace Dao;
 class DAO {
 	protected $entity;
 	protected $em;
@@ -44,14 +44,10 @@ class DAO {
 		}
 	}
 	
-	public function listAll($orderBy=false) {
+	public function listAll() {
 		try {
-			$order = array();
-			if($orderBy){
-				$order = array('name'=>'ASC');
-			}
 			$repository = $this->em->getRepository ( $this->entity );
-			$entities = $repository->findBy (array(), $order);
+			$entities = $repository->findAll ();
 			return $entities;
 		} catch ( \Exception $e ) {
 			return null;

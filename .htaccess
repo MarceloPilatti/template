@@ -3,7 +3,7 @@ AddHandler application/x-httpd-php70 .php .php5 .php4 .php3
 <IfModule mod_deflate.c>
     SetOutputFilter DEFLATE
     ServerSignature Off
-    RewriteCond %{HTTP_HOST} !=template
+    RewriteCond %{HTTP_HOST} !=advocacia
     #RewriteCond %{HTTP_HOST} !^www\.
     #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
     <IfModule mod_setenvif.c>
