@@ -1,5 +1,4 @@
 <?php
-namespace Dao;
 class DAO {
 	protected $entity;
 	protected $em;

@@ -1,9 +1,7 @@
 <?php
-namespace Dao;
-use Dao\DAO;
 class UserDAO extends DAO {
 	public function __construct() {
-		$this->entity = "Entity\\User";
+		$this->entity = "entity\\User";
 		parent::__construct();
 	}
 }
