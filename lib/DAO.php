@@ -1,4 +1,7 @@
 <?php
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
+use \Doctrine\DBAL\DBALException;
 class DAO {
 	protected $entity;
 	protected $em;
@@ -27,7 +30,9 @@ class DAO {
 				return $entity;
 			}
 			return null;
-		} catch ( \Exception $e ) {
+		} catch (ORMException $oRME) {
+			return null;
+		}catch (ORMInvalidArgumentException $iAE){
 			return null;
 		}
 	}
@@ -36,19 +41,21 @@ class DAO {
 		try {
 			$repository = $this->em->getRepository($this->entity );
 			$criteria = array ("id" => $id);
-			$entity = $repository->findOneBy ( $criteria );
+			$entity = $repository->findOneBy($criteria);
 			return $entity;
-		} catch ( \Exception $e ) {
+		} catch (ORMException $oRME) {
 			return null;
 		}
 	}
 	
-	public function listAll() {
+	public function listAll($orderBy=array(), $limit=null) {
 		try {
+			if(!empty($orderBy))
+				$orderBy = array($orderBy => "ASC");
 			$repository = $this->em->getRepository ( $this->entity );
-			$entities = $repository->findAll ();
+			$entities = $repository->findBy (array(),$orderBy, $limit);
 			return $entities;
-		} catch ( \Exception $e ) {
+		} catch (ORMException $oRME) {
 			return null;
 		}
 	}
@@ -59,6 +66,10 @@ class DAO {
 		foreach($objectArray as $name => $value) {
 			$metadata = $this->em->getClassMetadata(get_class($entity));
 			if($metadata->hasField($name)){
+				if($name == "id"){
+					$count++;
+					continue;
+				}
 				$columnName = $metadata->getFieldMapping($name)["columnName"];
 			}else{
 				$columnName = $metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
@@ -92,6 +103,10 @@ class DAO {
 		foreach($objectArray as $name => $value) {
 			$metadata = $this->em->getClassMetadata(get_class($entity));
 			if($metadata->hasField($name)){
+				if($name == "id"){
+					$count++;
+					continue;
+				}
 				$columnName = $metadata->getFieldMapping($name)["columnName"];
 			}else{
 				$columnName = $metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
@@ -156,10 +171,8 @@ class DAO {
 				return $entity;
 			}
 			return true;
-		} catch ( \Doctrine\DBAL\DBALException $dbalExc ) {
+		} catch ( DBALException $dbalExc ) {
 			return false;
-		} catch ( \Exception $e ) {
-			return false;
-		}
+		}	
 	}
 }
