@@ -3,17 +3,13 @@ namespace entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * User
- *
- * @ORM\Table(name="`USER`")
- * @ORM\Entity(repositoryClass="Entity\UserRepository")
+ * @ORM\Table(name="`ROLE_PRIVILEGE`")
+ * @ORM\Entity(repositoryClass="entity\RolePrivilegeRepository")
  * @ORM\Entity
  */
-class User
+class RolePrivilege
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="ID", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -21,19 +17,13 @@ class User
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="USER_NAME", type="string", length=10, nullable=false)
+     * @ORM\ManyToOne(targetEntity="entity\Privilege")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="PRIVILEGE_ID", referencedColumnName="id")
+     * })
      */
-    private $userName;
+    private $privilege;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="`PASSWORD`", type="string", length=10, nullable=false)
-     */
-    private $password;
-    
     /**
      * @ORM\ManyToOne(targetEntity="entity\Role")
      * @ORM\JoinColumns({
@@ -41,6 +31,7 @@ class User
      * })
      */
     private $role;
+
     
     public function getAttrs(){
     	return get_object_vars($this);

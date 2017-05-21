@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+.header {
+}
+.footer {
+}
+.error-page {
+    font-size: 36px;
+    padding: 20px
+}
+.flash {
+    margin-bottom: 0;
+    font-weight: bolder;
+    text-align: center;
+    font-size: 18px;
+    border-radius:0px !important;
+    border-top:0px;
+    border-left:0px;
+    border-right:0px;
+    position: fixed;
+    top: 0px;
+    left: 0;
+    right: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 1040; 
+}

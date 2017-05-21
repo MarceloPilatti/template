@@ -1,8 +1,12 @@
 <?php
+abstract class ErrorType {
+	const ERROR = 1;
+	const NOTFOUND = 2;
+}
 class ApplicationError {
 	public static function showError($throwable, $type) {
 		if ($type == ErrorType::NOTFOUND) {
-			$view = new View ( 'app/view/error/not-found-error-page.phtml' );
+			$view = new View ( '../app/view/error/not-found-error-page.phtml' );
 		} else if ($type == ErrorType::ERROR) {
 			$message = null;
 			if (getenv ( "APPLICATION_ENV" ) == "development") {
@@ -23,7 +27,7 @@ class ApplicationError {
 					$message .= "</tbody></table>";
 				}
 			}
-			$view = new View ( 'app/view/error/error-page.phtml' );
+			$view = new View ( '../app/view/error/error-page.phtml' );
 			$view->params = array ("message" => $message);
 		}
 		$view->showContent ();

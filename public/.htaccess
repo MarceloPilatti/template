@@ -1,0 +1,10 @@
+RewriteEngine on
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} !favicon.ico
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^([a-z]+)\/?$ index.php?c=$1 [NC,L]
+RewriteRule ^([a-z]+)\/([1-9]+)/?$ index.php?c=$1&id=$2 [NC,L]
+RewriteRule ^([a-z]+)\/([a-z]+)/?$ index.php?c=$1&a=$2 [NC,L]
+RewriteRule ^([a-z]+)\/([a-z]+)\/([1-9]+)/?$ index.php?c=$1&a=$2&id=$3 [NC,L]

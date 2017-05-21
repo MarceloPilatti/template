@@ -50,8 +50,7 @@ class DAO {
 	
 	public function listAll($orderBy=array(), $limit=null) {
 		try {
-			if(!empty($orderBy))
-				$orderBy = array($orderBy => "ASC");
+			if(!empty($orderBy)) $orderBy = array($orderBy => "ASC");
 			$repository = $this->em->getRepository ( $this->entity );
 			$entities = $repository->findBy (array(),$orderBy, $limit);
 			return $entities;
@@ -71,13 +70,9 @@ class DAO {
 					continue;
 				}
 				$columnName = $metadata->getFieldMapping($name)["columnName"];
-			}else{
-				$columnName = $metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
-			}
+			}else $columnName = $metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
 			$sql .= " `".$columnName."`";
-			if(count($objectArray) !== $count+1){
-				$sql .= ",";
-			}
+			if(count($objectArray) !== $count+1) $sql .= ",";
 			$count++;
 		}
 		return $sql;
@@ -89,9 +84,7 @@ class DAO {
 		foreach ( $objectArray as $value ) {
 			$value = $this->formatFields($value);
 			$sql .= $value;
-			if (count ( $objectArray ) !== $count + 1){
-				$sql .= ",";
-			}
+			if (count ( $objectArray ) !== $count + 1) $sql .= ",";
 			$count ++;
 		}
 		return $sql;
@@ -108,16 +101,10 @@ class DAO {
 					continue;
 				}
 				$columnName = $metadata->getFieldMapping($name)["columnName"];
-			}else{
-				$columnName = $metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
-			}
+			}else $columnName = $metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
 			$value = $this->formatFields($value);
-			
 			$sql .= " `".$columnName."` = " . $value;
-			
-			if(count($objectArray) !== $count+1){
-				$sql .= ",";
-			}
+			if(count($objectArray) !== $count+1) $sql .= ",";
 			$count++;
 		}
 		return $sql;
@@ -146,18 +133,10 @@ class DAO {
 	}
 	
 	public function formatFields($value){
-		if (is_string ( $value )) {
-			$value = "'" . $value . "'";
-		}
-		if (is_a($value, 'DateTime')){
-			$value = "'" . $value->format ( "Y-m-d H:i:s" ) . "'";
-		}
-		if (is_object($value) && $value->id){
-			$value = $value->id;
-		}
-		if (is_null ( $value )){
-			$value = 'null';
-		}
+		if (is_string($value)) $value = "'" . $value . "'";
+		if (is_a($value,'DateTime'))$value = "'" . $value->format ( "Y-m-d H:i:s" ) . "'";
+		if (is_object($value) && $value->id) $value = $value->id;
+		if (is_null($value)) $value = 'null';
 		return $value;
 	}
 	

@@ -1,18 +1,27 @@
 <?php
 class Auth{
-	public static function login($userName, $password){
+	public static function login($userName, $password, $captcha=null){
+		if(!session_id()) session_start();
+		if($captcha){		
+			if(!isset($_SESSION['attempts'])) $_SESSION['attempts'] = 0;
+			if($_SESSION['attempts'] == 3){
+				if($captch && $captcha != $_SESSION['captcha']){
+					FlashMessage::setMessage('Os caracteres digitados não correspondem com os da imagem', FlashType::ERROR, "/");
+				}
+			}
+		}
 		$userDao = new UserDAO();
 		$user = $userDao->checkLogin($userName, $password);
 		if($user){
-			if(!session_id()) session_start();
 			$_SESSION['logged'] = true;
 			$_SESSION['userId'] = $user->id;
 			$_SESSION['userName'] = $user->nameName;
+			if($captcha) $_SESSION['attempts'] = 0;
 		}
 		else{
-			FlashMessage::setMessage("Usuário e/ou senha inválido(s)", FlashType::ERROR);
+			if($captcha) $_SESSION['attempts'] += 1;
+			FlashMessage::setMessage("Usuário e/ou senha inválido(s)", FlashType::ERROR, "/");
 		}
-		Application::redirect('/');
 	}
 	public static function logout(){
 		if(!session_id()) session_start();
@@ -22,11 +31,7 @@ class Auth{
 		Application::redirect('/');
 	}
 	public static function isLogged(){
-		if(!empty($_SESSION['logged'])){
-			return true;
-		}
-		else{
-			return false;
-		}
+		if(!empty($_SESSION['logged'])) return true;
+		else return false;
 	}
 }
