@@ -1,9 +1,7 @@
 nbproject
 ._*
 .~lock.*
-config/autoload/doctrine_orm.local.php
-config/autoload/global.php
-data/DoctrineORMModule
+data/
 composer.lock
 /vendor/
 .settings/

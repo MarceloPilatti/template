@@ -1,10 +1,7 @@
-<?php 
-$params = $this->params;
-$message = $params["message"];
-include_once '../app/view/layout/header.phtml';
+<?php
+$message = $this->message;
 if($message){
 	echo $message;
 }else{
 	echo "<div class='error-page'>Ocorreu um erro ao tentar acessar essa página</div>";
 }
-include_once '../app/view/layout/footer.phtml';

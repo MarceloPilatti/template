@@ -6,7 +6,7 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="lib">
+	<buildpathentry kind="src" path="core">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
