@@ -1,4 +1,6 @@
 <?php
 return [
-    '/'=>'HomeController@index'
+    '/'=>'HomeController@index',
+    '/noticias'=>'NewsController@index',
+    '/noticias/{id}'=>['NewsController@index','newsId'],
 ];
