@@ -27,14 +27,14 @@ class LoginController{
 				return new View('login/index');
 			}
 		}catch(\Throwable $t){
-			ApplicationError::showError($t,ErrorType::ERROR);
+			return ApplicationError::showError($t,ErrorType::ERROR);
 		}
 	}
 	public function logoutAction(){
 		try{
 			Auth::logout();
 		}catch(\Throwable $t){
-			ApplicationError::showError($t,ErrorType::ERROR);
+			return ApplicationError::showError($t,ErrorType::ERROR);
 		}
 	}
 }

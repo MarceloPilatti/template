@@ -24,5 +24,9 @@
     padding-bottom: 10px;
     text-align: center;
     font-weight: bold;
-    z-index: 1040; 
+    z-index: 1040
+}
+.error-page {
+    font-size: 36px;
+    padding: 20px
 }

@@ -1,10 +1,8 @@
 <?php
 namespace Core;
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\ORMInvalidArgumentException;
-
 abstract class DAO{
     protected $entity;
     protected $em;
@@ -39,9 +37,7 @@ abstract class DAO{
     public function getBy($fieldName,$fieldValue){
         try{
             $repository=$this->em->getRepository($this->entity);
-            $criteria=array(
-                $fieldName=>$fieldValue
-            );
+            $criteria=array($fieldName=>$fieldValue);
             $entity=$repository->findOneBy($criteria);
             return $entity;
         }catch(ORMException $oRME){
@@ -50,12 +46,7 @@ abstract class DAO{
     }
     public function getById($id){
         try{
-            $repository=$this->em->getRepository($this->entity);
-            $criteria=array(
-                "id"=>$id
-            );
-            $entity=$repository->findOneBy($criteria);
-            return $entity;
+            return $this->getBy('id', $id);
         }catch(ORMException $oRME){
             return null;
         }
@@ -63,9 +54,7 @@ abstract class DAO{
     public function listAll($orderBy=array(),$limit=null){
         try{
             if(!empty($orderBy))
-                $orderBy=array(
-                    $orderBy=>"ASC"
-                );
+                $orderBy=array($orderBy=>"ASC");
             $repository=$this->em->getRepository($this->entity);
             $entities=$repository->findBy(array(),$orderBy,$limit);
             return $entities;

@@ -5,7 +5,7 @@ abstract class Session{
         $_SESSION[$key]=$value;
     }
     public static function get($key){
-        if (isset($_SESSION[$key]))return $_SESSION[$key];
+        if(isset($_SESSION[$key]))return $_SESSION[$key];
         return false;
     }
     public static function unset($keys){

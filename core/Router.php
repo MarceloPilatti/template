@@ -1,14 +1,19 @@
 <?php
 namespace Core;
-
 class Router{
+    private $routes;
+    private $url;
+    public function __construct(array $routes, $url){
+        $this->url=$url;
+        $this->routes=$routes;
+    }
     public function route(){
         $entity=null;
-        $url=parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // Get URL path like /site/create
+        $url=$this->url;
         if($url!=='/'){
-            $url=((substr($url, -1)==='/')?(substr($url, 0, -1)):($url)); // Remove the last '/' in case exists
+            $url=((substr($url,-1)==='/')?(substr($url,0,-1)):($url)); // Remove the last '/' in case exists
         }
-        $urlArray=explode('/', $url);
+        $urlArray=explode('/',$url);
         array_shift($urlArray); // Remove the first element of the url exploded (It's an ampty element)
         if(count($urlArray)==1){ // If the url has just the /site
             $route=$this->getRoute('/'.$urlArray[0]);
@@ -22,7 +27,7 @@ class Router{
                 $this->showNotFoundError();
             }
             // Get the entity based on the route
-            $entityName=substr($route[1], 0, strpos($route[1], 'Id'));
+            $entityName=substr($route[1],0,strpos($route[1],'Id'));
             $entityDAOClass="App\\DAO\\".ucfirst($entityName).'DAO';
             $entityDAO=new $entityDAOClass();
             $entityId=(int)$urlArray[1];
@@ -48,17 +53,17 @@ class Router{
         $view->show();
     }
     private function getRoute($route){
-        $routes=require_once __DIR__ . "/../app/routes.php";
-        $exists=array_key_exists($route, $routes);
+        $routes=$this->routes;
+        $exists=array_key_exists($route,$routes);
         return (($exists)?($routes[$route]):(null));
     }
     private function getRequest(){
-        $request = new \stdClass();
-        foreach ($_GET as $key => $value){
-            @$request->get->$key = $value;
+        $request=new \stdClass();
+        foreach($_GET as $key=>$value){
+            @$request->get->$key=$value;
         }
-        foreach ($_POST as $key => $value){
-            @$request->post->$key = $value;
+        foreach($_POST as $key=>$value){
+            @$request->post->$key=$value;
         }
         return $request;
     }
@@ -67,10 +72,10 @@ class Router{
         $view->show();
         exit();
     }
-    static function redirect($uri, $with = []){
-        if (count($with) > 0){
-            foreach ($with as $key => $value){
-                Session::set($key, $value);
+    static function redirect($uri,$with=[]){
+        if(count($with)>0){
+            foreach($with as $key=>$value){
+                Session::set($key,$value);
             }
         }
         return header('Location: '.$uri);

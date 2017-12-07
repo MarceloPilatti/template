@@ -16,7 +16,7 @@ class HomeController{
 			Session::set('selectedItem', 1);
 			return new View('home/index',array());
 		}catch(\Throwable $t){
-			ApplicationError::showError($t,ErrorType::ERROR);
+			return ApplicationError::showError($t,ErrorType::ERROR);
 		}
 	}
 	public function formAction($request){
