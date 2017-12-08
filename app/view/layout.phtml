@@ -1,14 +1,38 @@
 <?php
 use Core\Auth;
 use Core\FlashMessage;
+use Core\FlashType;
+use Core\Session;
 $logged=Auth::isLogged();
+$selectedItem=Session::get('selectedItem');
+$pageTitle=Session::get('pageTitle');
+$pageDescription=Session::get('pageDescription');
+$pageRobots=Session::get('pageRobots');
+$message=Session::get('message');
+$type=Session::get('type');
+Session::unset(['message','type']);
+$successHide="style='display:none'";
+$errorHide="style='display:none'";
+$warningHide="style='display:none'";
+$infoHide="style='display:none'";
+if($type==FlashType::SUCCESS){
+    $successHide='';
+}else if($type==FlashType::ERROR){
+    $errorHide='';
+}else if($type==FlashType::WARNING){
+    $warningHide='';
+}else if($type==FlashType::INFO){
+    $infoHide='';
+}
 ?>
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
-<title></title>
+<title><?php echo $pageTitle?></title>
+<meta name="description" content="<?php echo $pageDescription?>" />
+<meta name="robots" content="<?php echo $pageRobots?>" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
@@ -24,7 +48,10 @@ $logged=Auth::isLogged();
     <?php }?>
 	<div class="container">
         <div class="content">
-            <?php FlashMessage::show(); ?>
+            <div id='flashSuccess' class='flash alert alert-success' <?php echo $successHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
+            <div id='flashError' class='flash alert alert-danger' <?php echo $errorHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
+            <div id='flashWarning' class='flash alert alert-warning' <?php echo $warningHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
+            <div id='flashInfo' class='flash alert alert-info' <?php echo $infoHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
             <?php $this->content();?>
         </div>
     </div>

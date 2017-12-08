@@ -49,8 +49,8 @@ class Router{
             $this->showNotFoundError();
         }
         $request=$this->getRequest();
-        $view=$c->$a($request,$entity);
-        $view->show();
+        $result=$c->$a($request,$entity);
+        $result->show();
     }
     private function getRoute($route){
         $routes=$this->routes;

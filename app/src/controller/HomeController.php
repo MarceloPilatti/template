@@ -25,7 +25,11 @@ class HomeController{
 	        Application::redirect('/');
 	    }
 // 	    $home = new Home();
-
+// 	    $pageTitle='Início|Advocacia Diniz';
+// 	    $pageDescription=$home->subtitle;
+// 	    $pageRobots='index,follow';
+// 	    $selectedItem=Page::HOME;
+// 	    SessionService::setPageHeader($pageTitle,$pageDescription,$pageRobots,$selectedItem);
 // 	    $data = [
 // 	        'title' => $request->post->title,
 // 	        'content' => $request->post->content

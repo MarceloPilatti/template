@@ -1,6 +1,6 @@
 <?php
 namespace Core;
-class Validator{
+abstract class Validator{
     public static function make(array $data,array $rules){
         $errors=null;
         foreach($rules as $ruleKey=>$ruleValue){

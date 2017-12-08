@@ -30,3 +30,7 @@
     font-size: 36px;
     padding: 20px
 }
+.error-text{
+    color: red;
+    font-weight: bold !important
+}
