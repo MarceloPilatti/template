@@ -10,7 +10,7 @@ abstract class Auth{
     }
     public static function login($userName,$password){
         $userDao=new UserDAO();
-        $user=$userDao->getByUserName($userName);
+        $user=$userDao->getBy('name',$userName);
         if(!$user){
             FlashMessage::setMessage('Usuário e/ou senha inválido(s)',FlashType::ERROR);
             Router::redirect('/login');
@@ -34,7 +34,6 @@ abstract class Auth{
         Router::redirect('/');
     }
     public static function isLogged(){
-        if(Session::get('logged'))return true;
-        return false;
+        return (Session::get('logged')==true);
     }
 }

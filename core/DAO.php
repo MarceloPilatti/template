@@ -34,11 +34,15 @@ abstract class DAO{
             return null;
         }
     }
-    public function getBy($fieldName,$fieldValue){
+    public function getBy($fieldName,$fieldValue,$all=false){
         try{
             $repository=$this->em->getRepository($this->entity);
             $criteria=array($fieldName=>$fieldValue);
-            $entity=$repository->findOneBy($criteria);
+            if($all){
+                $entity=$repository->findBy($criteria);
+            }else{
+                $entity=$repository->findOneBy($criteria);
+            }
             return $entity;
         }catch(ORMException $oRME){
             return null;
@@ -87,7 +91,11 @@ abstract class DAO{
     public function getInsertFieldValues($entity,$objectArray){
         $count=0;
         $sql="";
-        foreach($objectArray as $value){
+        foreach($objectArray as $key=>$value){
+        	if($key=='id'){
+        		$count++;
+        		continue;
+        	}
             $value=$this->formatFields($value);
             $sql.=$value;
             if(count($objectArray)!==$count+1){
@@ -168,5 +176,14 @@ abstract class DAO{
         }catch(DBALException $dbalExc){
             return false;
         }
+    }
+    public function begin(){
+    	$this->em->getConnection()->beginTransaction();
+    }
+    public function commit(){
+    	$this->em->getConnection()->commit();
+    }
+    public function rollback(){
+    	$this->em->getConnection()->rollback();
     }
 }
