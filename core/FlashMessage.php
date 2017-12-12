@@ -8,9 +8,25 @@ abstract class FlashType{
 }
 abstract class FlashMessage{
     public static function setMessage($message,$type){
-        if(Session::get('message'))Session::unset('message');
-        if(Session::get('class'))Session::unset('class');
-        Session::set('message',$message.'.');
-        Session::set('type',$type);
+        if(Session::get('flashMessage'))Session::unset('flashMessage');
+        if(Session::get('flashClass'))Session::unset('flashClass');
+        $class='';
+        if($type==FlashType::SUCCESS){
+            $class='alert-success';
+        }
+        if($type==FlashType::WARNING){
+            $class='alert-warning';
+        }
+        if($type==FlashType::INFO){
+            $class='alert-info';
+        }
+        if($type==FlashType::ERROR){
+            $class='alert-danger';
+        }
+        if(substr($message,-1)!=='!' && substr($message,-1)!=='.'){
+            $message=$message.'.';
+        }
+        Session::set('flashMessage',$message);
+        Session::set('flashClass',$class);
     }
 }

@@ -1,28 +1,16 @@
 <?php
 use Core\Auth;
-use Core\FlashMessage;
-use Core\FlashType;
 use Core\Session;
 $logged=Auth::isLogged();
 $selectedItem=Session::get('selectedItem');
 $pageTitle=Session::get('pageTitle');
 $pageDescription=Session::get('pageDescription');
 $pageRobots=Session::get('pageRobots');
-$message=Session::get('message');
-$type=Session::get('type');
-Session::unset(['message','type']);
-$successHide="style='display:none'";
-$errorHide="style='display:none'";
-$warningHide="style='display:none'";
-$infoHide="style='display:none'";
-if($type==FlashType::SUCCESS){
-    $successHide='';
-}else if($type==FlashType::ERROR){
-    $errorHide='';
-}else if($type==FlashType::WARNING){
-    $warningHide='';
-}else if($type==FlashType::INFO){
-    $infoHide='';
+$message=$this->flashMessage;
+$class=$this->flashClass;
+$alertHide="style='display:none'";
+if(isset($message)){
+    $alertHide='';
 }
 ?>
 <!doctype html>
@@ -48,10 +36,7 @@ if($type==FlashType::SUCCESS){
     <?php }?>
 	<div class="container">
         <div class="content">
-            <div id='flashSuccess' class='flash alert alert-success' <?php echo $successHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
-            <div id='flashError' class='flash alert alert-danger' <?php echo $errorHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
-            <div id='flashWarning' class='flash alert alert-warning' <?php echo $warningHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
-            <div id='flashInfo' class='flash alert alert-info' <?php echo $infoHide?>><?php echo $message ?><button class='close' data-dismiss='alert' aria-hidden='true'>&times;</button></div>
+            <div id='flashMessage' class='flash-bottom-right alert <?php echo $class?>' <?php echo $alertHide?>><?php echo $message ?></div>
             <?php $this->content();?>
         </div>
     </div>

@@ -19,7 +19,7 @@ class Router{
         if(count($urlArray)==3){
             $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{id}');
         }else if(count($urlArray)==2){
-            if(is_numeric($urlArray[0])){
+            if(is_numeric($urlArray[1])){
                 $route='/'.$urlArray[0].'/{id}';
             }else{
                 $route='/'.$urlArray[0].'/'.$urlArray[1];

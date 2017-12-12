@@ -25,6 +25,11 @@ class View{
             $this->inputs=Session::get('inputs');
             Session::unset('inputs');
         }
+        if(Session::get('flashMessage')){
+            $this->flashMessage=Session::get('flashMessage');
+            $this->flashClass=Session::get('flashClass');
+            Session::unset(['flashMessage','flashClass']);
+        }
     }
     public function show(){
         return require_once $this->layoutPath;
