@@ -26,7 +26,7 @@ abstract class Auth{
         Session::set('userId',$user->id);
         Session::set('userName',$user->name);
         Session::set('minify','');
-        if(getenv("APPLICATION_ENV")=="production")Session::set('minify','min');
+        if(getenv("APPLICATION_ENV")!="development")Session::set('minify','.min');
         Router::redirect('/');
     }
     public static function logout(){

@@ -2,7 +2,7 @@
 namespace Core;
 abstract class Filter{
     public static function filterString($var){
-        return filter_var(trim($var), FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_HIGH);
+        return filter_var(trim($var), FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_LOW);
     }
     public static function filterHtml($var){
         return filter_var(trim($var), FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_STRIP_LOW);

@@ -25,6 +25,8 @@ class View{
             $this->inputs=Session::get('inputs');
             Session::unset('inputs');
         }
+        $this->flashMessage=null;
+        $this->flashClass=null;
         if(Session::get('flashMessage')){
             $this->flashMessage=Session::get('flashMessage');
             $this->flashClass=Session::get('flashClass');

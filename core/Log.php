@@ -10,9 +10,9 @@ abstract class Log{
         $levelStr='';
         if($level==LogLevel::INFO){
             $levelStr='INFO';
-        }else if($level==LogLevel::WARNING){
+        }elseif($level==LogLevel::WARNING){
             $levelStr='WARNING';
-        }else if($level==LogLevel::ERROR){
+        }elseif($level==LogLevel::ERROR){
             $levelStr='ERROR';
         }
         $date=date('Y-m-d H:i:s');

@@ -8,7 +8,7 @@ abstract class ApplicationError{
     public static function showError($throwable,$type){
         if($type==ErrorType::NOTFOUND){
             return new View('error/not-found-error-page');
-        }else if($type==ErrorType::ERROR){
+        }elseif($type==ErrorType::ERROR){
             $message=null;
             if(getenv("APPLICATION_ENV")=="development"){
                 if($throwable){

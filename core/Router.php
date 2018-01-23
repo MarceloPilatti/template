@@ -16,16 +16,22 @@ class Router{
         $urlArray=explode('/',$url);
         array_shift($urlArray); // Remove the first element of the url exploded (It's an ampty element)
 
-        if(count($urlArray)==3){
-            $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{id}');
-        }else if(count($urlArray)==2){
-            if(is_numeric($urlArray[1])){
-                $route='/'.$urlArray[0].'/{id}';
+        if(count($urlArray)==3){ // Case site is like site.com/user/get/1
+            if(is_numeric($urlArray[2])){
+                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{id}');
             }else{
-                $route='/'.$urlArray[0].'/'.$urlArray[1];
+                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{slug}');
             }
-            $route=$this->getRoute($route);
-        }else if(count($urlArray)==1){
+        }elseif(count($urlArray)==2){// Case site is like site.com/user/1 or site.com/user/form
+            if(is_numeric($urlArray[1])){
+                $route=$this->getRoute('/'.$urlArray[0].'/{id}');
+            }else{
+                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1]);
+                if(!$route){
+                    $route=$this->getRoute('/'.$urlArray[0].'/{slug}');
+                }
+            }
+        }elseif(count($urlArray)==1){
             $route=$this->getRoute('/'.$urlArray[0]);
         }else{
             $this->showNotFoundError();
@@ -36,18 +42,27 @@ class Router{
         }
         list($controller,$action)=explode('@',((is_array($route)?($route[0]):($route))));
 
-        if(is_numeric(end($urlArray))){
-            // Get the entity based on the route
-            $entityName=substr($route[1],0,strpos($route[1],'Id'));
-            $entityDAOClass="App\\DAO\\".ucfirst($entityName).'DAO';
-            $entityDAO=new $entityDAOClass();
-            $entityId=(int)$urlArray[(count($urlArray)-1)];
-            $entity=$entityDAO->getById($entityId);
-            if(!$entity){
-                $this->showNotFoundError();
+        if(is_array($route)){
+            if(count($route)!=1){
+                $entityName=$route[1];
+                $paramType=$route[2];
+                $entityDAOClass="App\\DAO\\".ucfirst($entityName).'DAO';
+                $entityDAO=new $entityDAOClass();
+                if($paramType=='slug'){
+                    $entitySlug=end($urlArray);
+                    $entity=$entityDAO->getBySlug($entitySlug);
+                    if(!$entity){
+                        $this->showNotFoundError();
+                    }
+                }else if($paramType=='id'){
+                    $entityId=(int)end($urlArray);
+                    $entity=$entityDAO->getById($entityId);
+                    if(!$entity){
+                        $this->showNotFoundError();
+                    }
+                }
             }
         }
-
         $class='App\\Controller\\'.$controller;
         if(!class_exists($class)){
             $this->showNotFoundError();
@@ -77,6 +92,9 @@ class Router{
         }
         foreach($_POST as $key=>$value){
             @$request->post->$key=$value;
+        }
+        foreach($_FILES as $key=>$value){
+            @$request->files->$key=$value;
         }
         return $request;
     }

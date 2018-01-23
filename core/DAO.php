@@ -55,12 +55,32 @@ abstract class DAO{
             return null;
         }
     }
-    public function listAll($orderBy=array(),$limit=null){
+    public function getBySlug($slug){
         try{
-            if(!empty($orderBy))
-                $orderBy=array($orderBy=>"ASC");
+            return $this->getBy('slug', $slug);
+        }catch(ORMException $oRME){
+            return null;
+        }
+    }
+    public function count(){
+        $sql="SELECT COUNT(*) FROM ".$this->tableName;
+        $conn=$this->em->getConnection();
+        try{
+            $stmt=$conn->prepare($sql);
+            $stmt->execute();
+            $count=reset($stmt->fetchAll()[0]);
+            return $count;
+        }catch(DBALException $dbalExc){
+            return false;
+        }
+    }
+    public function listAll($orderBy=array(),$order='ASC',$limit=null,$page=null){
+        try{
+            $offset=null;
+            if($page)$offset=$limit*($page-1);
+            if(!empty($orderBy)) $orderBy=array($orderBy=>$order);
             $repository=$this->em->getRepository($this->entity);
-            $entities=$repository->findBy(array(),$orderBy,$limit);
+            $entities=$repository->findBy(array(),$orderBy,$limit,$offset);
             return $entities;
         }catch(ORMException $oRME){
             return null;
@@ -110,11 +130,11 @@ abstract class DAO{
         $count=0;
         foreach($objectArray as $name=>$value){
             $metadata=$this->em->getClassMetadata(get_class($entity));
+            if($name=="id" || $name[0]=='_'){
+                $count++;
+                continue;
+            }
             if($metadata->hasField($name)){
-                if($name=="id"){
-                    $count++;
-                    continue;
-                }
                 $columnName=$metadata->getFieldMapping($name)["columnName"];
             }else{
                 $columnName=$metadata->getAssociationMapping($name)["joinColumns"][0]["name"];
