@@ -18,6 +18,9 @@ if($env=='development')$isDevMode=true;
 $proxyDir=__DIR__.'/data/DoctrineORMModule/Proxy';
 if(!is_dir($proxyDir)) mkdir($proxyDir,0777,true);
 $config = parse_ini_file("config/config.ini", true );
+if($env == 'production'){
+    $config = parse_ini_file("config/config-production.ini", true );
+}
 $dbParams=array (
     'driver'=>$config['database']['driver'],
     'user'=>$config['database']['user'],
