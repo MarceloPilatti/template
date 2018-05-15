@@ -135,10 +135,10 @@ abstract class Validator{
             if ($error) {
                 switch ($error) {
                     case UPLOAD_ERR_INI_SIZE:
-                        $msg = "O tamanho do documento ".$fileName." excede o limite de ".$postMaxSize."B.";
+                        $msg = "O tamanho do arquivo ".$fileName." excede o limite de ".$postMaxSize."B.";
                         break;
                     case UPLOAD_ERR_FORM_SIZE:
-                        $msg = "O tamanho do documento ".$fileName." excede o limite de ".$postMaxSize."B.";
+                        $msg = "O tamanho do arquivo ".$fileName." excede o limite de ".$postMaxSize."B.";
                         break;
                     case UPLOAD_ERR_PARTIAL:
                         $msg = 'O upload do arquivo foi feito parcialmente.';
@@ -158,15 +158,15 @@ abstract class Validator{
                 }
             }
             if (empty($fileName)&&empty($tempName)) {
-                $msg = "Nenhum documento foi selecionado.";
+                $msg = "Nenhum arquivo foi selecionado.";
                 return $msg;
             }
             if ($fileSize<=0||$fileSize>$postMaxSizeBytes) {
-                $msg = "O tamanho do documento ".$fileName." excede o limite de ".$postMaxSize."B.";
+                $msg = "O tamanho do arquivo ".$fileName." excede o limite de ".$postMaxSize."B.";
                 return $msg;
             }
-            if (!in_array($fileExtension, $validExtensions)) {
-                $msg = "A extensão do documento ".$fileName." é inválida.";
+            if (!in_array(strtolower($fileExtension), $validExtensions)) {
+                $msg = "A extensão do arquivo ".$fileName." é inválida.";
                 return $msg;
             }
             return $msg;
@@ -192,6 +192,15 @@ abstract class Validator{
 
     public static function rearrangeArrayFiles(&$files)
     {
+        if($files['name'][0]=="" || $files['name'][0]==null){
+            return null;
+        }
+        if(!is_array($files['name'])){
+            $temp=$files;
+            $files=array();
+            $files[0]=$temp;
+            return $files;
+        }
         $fileList = array();
         $fileCount = count($files['name']);
         $fileKeys = array_keys($files);

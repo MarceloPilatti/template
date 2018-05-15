@@ -34,10 +34,36 @@ abstract class DAO{
             return null;
         }
     }
+    public function deleteBy($fieldName,$fieldValue){
+        try{
+            $entites=$this->getBy($fieldName, $fieldValue, true);
+            foreach ($entites as $entity){
+                $entity=$this->em->getReference(get_class($entity),$entity->id);
+                if($entity){
+                    $this->em->remove($entity);
+                }
+            }
+            $this->em->flush();
+            return true;
+        }catch(ORMException $oRME){
+            return false;
+        }catch(ORMInvalidArgumentException $iAE){
+            return false;
+        }
+    }
     public function getBy($fieldName,$fieldValue,$all=false){
         try{
+            if(is_array($fieldName) && is_array($fieldValue)){
+                $count=0;
+                $fieldNameCount=count($fieldName);
+                while($count<$fieldNameCount){
+                    $criteria[$fieldName[$count]]=$fieldValue[$count];
+                    $count++;
+                }
+            }else{
+                $criteria=array($fieldName=>$fieldValue);
+            }
             $repository=$this->em->getRepository($this->entity);
-            $criteria=array($fieldName=>$fieldValue);
             if($all){
                 $entity=$repository->findBy($criteria);
             }else{

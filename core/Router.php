@@ -86,15 +86,15 @@ class Router{
         return (($exists)?($routes[$route]):(null));
     }
     private function getRequest(){
-        $request=new \stdClass();
+        $request=new Request();
         foreach($_GET as $key=>$value){
-            @$request->get->$key=$value;
+            @$request->setGet($key,$value);
         }
         foreach($_POST as $key=>$value){
-            @$request->post->$key=$value;
+            @$request->setPost($key,$value);
         }
         foreach($_FILES as $key=>$value){
-            @$request->files->$key=$value;
+            @$request->setFiles($key,$value);
         }
         return $request;
     }
