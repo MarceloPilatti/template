@@ -3,24 +3,24 @@
 	"description" : "Template",
 	"homepage" : "http://template.com.br",
 	"require" : {
-		"php" : "^7.0",
-		"doctrine/orm" : "^2.5.5",
-		"intervention/image" : "^2.3",
-		"phpmailer/phpmailer" : "^5.2"
+		"php" : "^7.2",
+		"phpmailer/phpmailer": "^6.0",
+		"intervention/image": "^2.4",
+		"ext-gd": "*"
 	},
 	"autoload" : {
-        "psr-4" : {
-            "App\\" : "app/src/",
-            "Core\\" : "core/"
-        }
-    },
-    "scripts" : {
-        "proxy:create" : "mkdir -m 777 -p data/DoctrineORMModule/Proxy",
-        "proxy:clear" : "rm -rf data/DoctrineORMModule/Proxy/*",
-        "proxy:generate" : "./vendor/doctrine/orm/bin/doctrine orm:generate-proxies",
-        "bd:generate-entities" : "./vendor/doctrine/orm/bin/doctrine orm:convert-mapping --namespace='App\\Entity\\' --force --from-database annotation ./app/src/entity",
-        "dump": "composer dump-autoload -o",
-        "minify:js" : "cd public/js/;uglifyjs script.js -c -m -o script.min.js",
-        "minify:css" : "cd public/css/;uglifycss style.css --output style.min.css;"
-    }
+		"psr-4" : {
+			"App\\" : "app/src/",
+			"Core\\" : "core/"
+		}
+	},
+	"scripts" : {
+		"minify:js" : "cd public/js/;uglifyjs script.js -c -m -o script.min.js",
+		"minify:css" : "cd public/css/;uglifycss style.css --output style.min.css;",
+		"dump" : "composer dump-autoload -o",
+		"upload:clear" : "sudo rm -rf data/uploads/*",
+		"upload:create" : "sudo mkdir -m 777 data/uploads",
+		"cache:clear" : "sudo rm -rf data/cache/*",
+		"cache:create" : "sudo mkdir -m 777 data/cache"
+	}
 }

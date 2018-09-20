@@ -1,12 +1,9 @@
 <?php
 namespace App\Entity;
-class User{
+class Role{
     private $id;
-    private $userName;
-    private $password;
-    private $role;
-    
-    
+    private $name;
+    private $isAdmin;
     public static function rules(){
         return [
         ];

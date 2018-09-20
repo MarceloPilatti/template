@@ -1,11 +1,11 @@
 <?php
 namespace App\dao;
 use Core\DAO;
-class UserDAO extends DAO{
+class PrivilegeDAO extends DAO{
     public function __construct($dBName=null)
     {
         parent::__construct($dBName);
-        $this->entity = "Core\\Acl\\Entity\\User";
-        $this->tableName = "USER";
+        $this->entity = "Core\\Acl\\Entity\\Privilege";
+        $this->tableName = "PRIVILEGE";
     }
 }

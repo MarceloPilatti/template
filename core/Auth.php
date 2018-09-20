@@ -1,16 +1,13 @@
 <?php
 namespace Core;
-use App\DAO\UserDAO;
+use Core\Acl\dao\UserDAO;
 abstract class Auth{
-    public static function userId(){
-        return Session::get('userId');
-    }
-    public static function userName(){
+    public static function user(){
         return Session::get('userName');
     }
     public static function login($userName,$password){
         $userDao=new UserDAO();
-        $user=$userDao->getBy('name',$userName);
+        $user=$userDao->getBy(['name'=>$userName]);
         if(!$user){
             FlashMessage::setMessage('Usuário e/ou senha inválido(s)',FlashType::ERROR);
             Router::redirect('/login');
@@ -23,8 +20,7 @@ abstract class Auth{
         }
         if(!session_id())session_start();
         Session::set('logged',true);
-        Session::set('userId',$user->id);
-        Session::set('userName',$user->name);
+        Session::set('user',$user);
         Session::set('minify','');
         if(getenv("APPLICATION_ENV")!="development")Session::set('minify','.min');
         Router::redirect('/');

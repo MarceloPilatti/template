@@ -5,7 +5,7 @@ abstract class ErrorType{
     const NOTFOUND=2;
 }
 abstract class ApplicationError{
-    public static function showError($throwable,$type){
+    public static function showError($throwable=null,$type){
         if($type==ErrorType::NOTFOUND){
             return new View('error/not-found-error-page');
         }elseif($type==ErrorType::ERROR){
@@ -28,7 +28,7 @@ abstract class ApplicationError{
                     $message.="</tbody></table></div>";
                 }
             }
-            return new View('error/error-page',array("message"=>$message));
+            return new View('error/error-page',["message"=>$message]);
         }
     }
 }

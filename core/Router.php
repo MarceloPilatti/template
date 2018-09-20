@@ -3,77 +3,64 @@ namespace Core;
 class Router{
     private $routes;
     private $url;
-    public function __construct(array $routes, $url){
+    public function __construct($routes=[], $url){
         $this->url=$url;
         $this->routes=$routes;
     }
     public function route(){
-        $entity=null;
         $url=$this->url;
-        if($url!=='/'){
-            $url=((substr($url,-1)==='/')?(substr($url,0,-1)):($url)); // Remove the last '/' in case exists
+        if($url!=='/' && (substr($url,-1)==='/')){
+            $url=substr($url,-1);
         }
         $urlArray=explode('/',$url);
-        array_shift($urlArray); // Remove the first element of the url exploded (It's an ampty element)
-
-        if(count($urlArray)==3){ // Case site is like site.com/user/get/1
-            if(is_numeric($urlArray[2])){
-                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{id}');
-            }else{
-                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{slug}');
-            }
-        }elseif(count($urlArray)==2){// Case site is like site.com/user/1 or site.com/user/form
-            if(is_numeric($urlArray[1])){
-                $route=$this->getRoute('/'.$urlArray[0].'/{id}');
-            }else{
-                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1]);
-                if(!$route){
-                    $route=$this->getRoute('/'.$urlArray[0].'/{slug}');
-                }
-            }
-        }elseif(count($urlArray)==1){
+        array_shift($urlArray);
+        $urlCount=count($urlArray);
+        if($urlCount==1){
             $route=$this->getRoute('/'.$urlArray[0]);
+        }else if ($urlCount==2){
+            if(method_exists('App\\Controller\\'.ucfirst($urlArray[0]).'Controller',$urlArray[1].'Action')){
+                $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1]);
+            }else{
+                $param=$urlArray[1];
+                if(is_numeric($param)){
+                    $paramName='{id}';
+                }else{
+                    $paramName='{slug}';
+                }
+                $route=$this->getRoute('/'.$urlArray[0].'/'.$paramName);
+            }
+        }else if ($urlCount==3){
+            $param=$urlArray[2];
+            $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1].'/{id}');
         }else{
             $this->showNotFoundError();
         }
-
-        if(!$route){
-            $this->showNotFoundError();
-        }
-        list($controller,$action)=explode('@',((is_array($route)?($route[0]):($route))));
-
-        if(is_array($route)){
-            if(count($route)!=1){
-                $entityName=$route[1];
-                $paramType=$route[2];
-                $entityDAOClass="App\\DAO\\".ucfirst($entityName).'DAO';
-                $entityDAO=new $entityDAOClass();
-                if($paramType=='slug'){
-                    $entitySlug=end($urlArray);
-                    $entity=$entityDAO->getBySlug($entitySlug);
-                    if(!$entity){
-                        $this->showNotFoundError();
-                    }
-                }else if($paramType=='id'){
-                    $entityId=(int)end($urlArray);
-                    $entity=$entityDAO->getById($entityId);
-                    if(!$entity){
-                        $this->showNotFoundError();
-                    }
-                }
+        $actionName='';
+        if($route){
+            $routeArray=explode('@', $route);
+            $controllerName=$routeArray[0];
+            if(count($routeArray)>1){
+                $actionName=$routeArray[1];
+            }
+        }else{
+            $controllerName=ucfirst($urlArray[0]).'Controller';
+            if($urlCount>1){
+                $actionName=$urlArray[1];
             }
         }
-        $class='App\\Controller\\'.$controller;
-        if(!class_exists($class)){
+        if(!$actionName){
+            $actionName='index';
+        }
+        $controllerClass='App\\Controller\\'.$controllerName;
+        if(!class_exists($controllerClass)){
             $this->showNotFoundError();
         }
-        $c=new $class();
-        $a=$action.'Action';
-        if(!method_exists($class,$a)){
+        $action=$actionName.'Action';
+        if(!method_exists($controllerClass,$action)){
             $this->showNotFoundError();
         }
-        $request=$this->getRequest();
-        $result=$c->$a($request,$entity);
+        $controller=new $controllerClass();
+        $result=$controller->$action($param);
         if(is_string($result)){
             echo $result;
             exit();
@@ -84,19 +71,6 @@ class Router{
         $routes=$this->routes;
         $exists=array_key_exists($route,$routes);
         return (($exists)?($routes[$route]):(null));
-    }
-    private function getRequest(){
-        $request=new Request();
-        foreach($_GET as $key=>$value){
-            @$request->setGet($key,$value);
-        }
-        foreach($_POST as $key=>$value){
-            @$request->setPost($key,$value);
-        }
-        foreach($_FILES as $key=>$value){
-            @$request->setFiles($key,$value);
-        }
-        return $request;
     }
     private function showNotFoundError(){
         $view=ApplicationError::showError(null,ErrorType::NOTFOUND);

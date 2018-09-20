@@ -1,12 +1,12 @@
 <?php
 namespace App\Controller;
 
-use Core\Application;
 use Core\ApplicationError;
 use Core\Auth;
 use Core\ErrorType;
 use Core\FlashMessage;
 use Core\FlashType;
+use Core\Router;
 use Core\Session;
 use Core\View;
 
@@ -22,7 +22,7 @@ class HomeController{
 	public function formAction($request){
 	    if(!Auth::isLogged()){
 	        FlashMessage::setMessage('Você precisa estar logado para acessar essa página', FlashType::ERROR);
-	        Application::redirect('/');
+	        Router::redirect('/');
 	    }
 // 	    $home = new Home();
 // 	    $pageTitle='Início|Advocacia Diniz';

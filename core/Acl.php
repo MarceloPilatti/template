@@ -1,5 +1,5 @@
 <?php
-namespace Core\Acl;
+namespace Core;
 class Acl{
     private $roles;
     private $rolePrivileges;

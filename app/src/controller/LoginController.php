@@ -3,18 +3,19 @@ namespace App\Controller;
 
 use Core\ApplicationError;
 use Core\Auth;
+use Core\Controller;
 use Core\ErrorType;
 use Core\FlashMessage;
 use Core\FlashType;
 use Core\Router;
 use Core\View;
 
-class LoginController{
-	public function indexAction($request){
+class LoginController extends Controller{
+	public function indexAction(){
 		try{
-			if(!empty($_POST)){
-			    $userName=$request->post->userName;
-			    $password=$request->post->password;
+		    if($this->isPost()){
+    		    $userName=$this->getFormData('userName');
+    		    $password=$this->getFormData('password');
 				if(!isset($userName)){
 					FlashMessage::setMessage("Usuário e/ou senha inválido(s)",FlashType::ERROR);
 				}

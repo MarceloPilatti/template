@@ -5,8 +5,8 @@ abstract class LogLevel{
     const WARNING=2;
     const ERROR=3;
 }
-abstract class Log{
-    public static function logMessage($msg,$level=LogLevel::ERROR,$file=false){
+abstract class Logger{
+    public static function log($msg,$level=LogLevel::ERROR,$file=false){
         $levelStr='';
         if($level==LogLevel::INFO){
             $levelStr='INFO';
