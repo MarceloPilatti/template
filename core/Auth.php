@@ -1,27 +1,33 @@
 <?php
 namespace Core;
-use Core\Acl\dao\UserDAO;
+
+use App\dao\UserDAO;
+
 abstract class Auth{
     public static function user(){
         return Session::get('userName');
     }
     public static function login($userName,$password){
         $userDao=new UserDAO();
-        $user=$userDao->getBy(['name'=>$userName]);
+        $user=$userDao->getBy(['userName'=>$userName]);
+        $attempts=Session::get('attempts');
+        if(!$attempts){
+            $attempts=0;
+        }
         if(!$user){
-            FlashMessage::setMessage('Usuário e/ou senha inválido(s)',FlashType::ERROR);
-            Router::redirect('/login');
+            Session::set('attempts',++$attempts);
+            FlashMessage::setMessage('Usuário inválido',FlashType::ERROR, '/login');
         }
         $userPassword=$user->password;
         $result=password_verify($password,$userPassword);
         if(!$result){
-            FlashMessage::setMessage('Usuário e/ou senha inválido(s)',FlashType::ERROR);
-            Router::redirect('/login');
+            Session::set('attempts',++$attempts);
+            FlashMessage::setMessage('Senha inválida',FlashType::ERROR, '/login');
         }
         if(!session_id())session_start();
         Session::set('logged',true);
         Session::set('user',$user);
-        Session::set('minify','');
+        Session::set('attempts',0);
         if(getenv("APPLICATION_ENV")!="development")Session::set('minify','.min');
         Router::redirect('/');
     }

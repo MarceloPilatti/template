@@ -4,10 +4,8 @@ namespace App\Service;
 use Core\Session;
 
 abstract class SessionService{
-    public static function setPageHeader($pageTitle,$pageDescription,$pageRobots,$selectedItem){
-        Session::set('selectedItem', $selectedItem);
-        Session::set('pageTitle', $pageTitle);
-        Session::set('pageDescription', $pageDescription);
-        Session::set('pageRobots', $pageRobots);
+    public static function setPageHeader($pageConfig=null,$page=null){
+        Session::set('pageConfig', $pageConfig);
+        Session::set('page', $page);
     }
 }

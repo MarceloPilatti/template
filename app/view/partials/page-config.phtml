@@ -1,0 +1,51 @@
+<?php
+use Core\Session;
+
+$pageConfigId='';
+$pageConfigUrl=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
+$page=Session::get('page');
+$pageConfig=Session::get('pageConfig');
+$title='';
+$description='';
+$robots='';
+if($pageConfig){
+    $title=$pageConfig->title;
+    $description=$pageConfig->description;
+    $robots=$pageConfig->robots;
+    $page=$pageConfig->page;
+    $pageConfigId=$pageConfig->id;
+    $pageConfigUrl=$pageConfig->url;
+}
+$errors=$this->errors;
+$inputs=$this->inputs;
+$title=((isset($inputs['title']))?($inputs['title']):($title));
+$description=((isset($inputs['description']))?(html_entity_decode($inputs['description'])):(html_entity_decode($description)));
+$url=((isset($inputs['url']))?($inputs['url']):($pageConfigUrl));
+$robots=((isset($inputs['robots']))?($inputs['robots']):($robots));
+?>
+<form action="/pageConfig/form" method="post">
+    <input name='page' type="hidden" value="<?php echo $page ?>" />
+    <input name='pageConfigId' type="hidden" value="<?php echo $pageConfigId?>" />
+    <input name='pageConfigUrl' type="hidden" value="<?php echo $pageConfigUrl ?>" />
+    <div class="form-group">
+    	<label>Título da página</label>
+    	<input type="text" name="title" class="form-control <?php (($errors['title'])?(print "border-danger"):(''))?>" value="<?php echo $title?>" />
+    	<p id='pageTitleError' class="text-danger"><?php echo $errors['title'] ?></p>
+    </div>
+    <div class="form-group">
+        <label>Descrição da página</label>
+        <textarea name="description" rows="5" class="form-control"><?php echo $description ?></textarea>
+        <p id='pageDescriptionError' class="text-danger"><?php echo $errors['description'] ?></p>
+    </div>
+    <div class="form-group">
+        <label>Url</label>
+        <textarea name="url" rows="5" class="form-control"><?php echo $url ?></textarea>
+        <p id='pageUrlError' class="text-danger"><?php echo $errors['url'] ?></p>
+    </div>
+    <div class="form-group">
+        <label>Robots</label>
+        <textarea name="robots" rows="5" class="form-control"><?php echo $robots ?></textarea>
+        <p id='pageRobotsError' class="text-danger"><?php echo $errors['robots'] ?></p>
+    </div>
+    <input class="btn btn-primary" type="submit" value='Salvar' />
+</form>

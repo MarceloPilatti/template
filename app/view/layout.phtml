@@ -1,19 +1,22 @@
 <?php
-// use App\Service\AddressService;
 use Core\Auth;
 use Core\Session;
+
 $min=Session::get('minify');
-$logged=Auth::isLogged();
-$selectedItem=Session::get('selectedItem');
-$pageTitle=Session::get('pageTitle');
-$pageDescription=Session::get('pageDescription');
-$pageRobots=Session::get('pageRobots');
-$pageUrl=Session::get('pageUrl');
-$message=$this->flashMessage;
-$class=$this->flashClass;
+$version=Session::get('version');
+$isLogged=Auth::isLogged();
+$page=Session::get('page');
+$pageConfig=Session::get('pageConfig');
+if($pageConfig){
+    $pageTitle=$pageConfig->title;
+    $pageDescription=$pageConfig->description;
+    $pageRobots=$pageConfig->robots;
+    $pageUrl=$pageConfig->url;
+}
+$flashClass=$this->flashClass;
+$flashMessage=$this->flashMessage;
 $alertHide="style='display:none'";
-// $address=AddressService::getAddress();
-if(isset($message)){
+if(isset($flashMessage)){
     $alertHide='';
 }
 ?>
@@ -24,112 +27,38 @@ if(isset($message)){
 <meta name="description" content="<?php echo $pageDescription?>" />
 <link rel="canonical" href="<?php echo $pageUrl?>" />
 <meta name="robots" content="<?php echo $pageRobots?>" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta charset="utf-8">
 <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico"/>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" />
-<link rel="stylesheet" type="text/css" href="/css/style<?php echo $min?>.css?v=1" />
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css?v=<?php echo $version?>" />
+<link rel="stylesheet" type="text/css" href="/css/style<?php echo $min?>.css?v=<?php echo $version?>" />
+
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js?v=<?php echo $version?>"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js?v=<?php echo $version?>"></script>
+<script type="text/javascript" src="/js/jquery.inputmask.bundle.min.js?v=<?php echo $version?>"></script>
+<script type="text/javascript" src="/js/script<?php echo $min?>.js?v=<?php echo $version?>"></script>
 </head>
 <body>
-	<div class="container">
-        <div class="header">
-            <div class='pull-left header-logo'>
-                <a href="/">
-                    <img id='logo' class="logo" src="/img/logo.png" alt="Logo: Advocacia Diniz" />
-                </a>
-            </div>
-            <?php if($logged){?>
-                <strong class="pull-right">
-                    <a class="logged" href="/logout">
-                        Logout<span class="glyphicon glyphicon-off"></span>
-                    </a>
-                </strong>
-            <?php }?>
-            <ul class="header-menu">
-                <li class="header-menu-item <?php (($selectedItem == 5)?(print "active"):(""))?>">
-                    <a href="/contato">Contato</a>
-                </li>
-                <li class="header-menu-item <?php (($selectedItem == 4)?(print "active"):(""))?>">
-                    <a href="/noticias">Notícias</a>
-                </li>
-                <li class="header-menu-item <?php (($selectedItem == 3)?(print "active"):(""))?>">
-                    <a href="/servicos">Serviços</a>
-                </li>
-                <li class="header-menu-item <?php (($selectedItem == 2)?(print "active"):(""))?>">
-                    <a href="/sobre-nos">Sobre</a>
-                </li>
-                <li class="header-menu-item <?php (($selectedItem == 1)?(print "active"):(""))?>">
-                    <a href="/">Home</a>
-                </li>
-            </ul>
-            <div class="dropdown">
-                <a href="#" class="header-menu-mobile dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-menu-hamburger"></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-                    <li>
-                        <a href="/sobre-nos">Sobre</a>
-                    </li>
-                    <li>
-                        <a href="/servicos">Serviços</a>
-                    </li>
-                    <li>
-                        <a href="/noticias">Notícias</a>
-                    </li>
-                    <li>
-                        <a href="/contato">Contato</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="content">
-		<div id='flashMessage' class='flash-bottom-right alert <?php echo $class?>' <?php echo $alertHide?>><?php echo $message ?></div>
-        <?php $this->content();?>
-        </div>
-        <div class="footer">
-            <div class="col-md-12">
-                <div class="col-md-3">
-                <?php if($address){?>
-<!--                 	<div class='address-footer'> -->
-<!--                 		<h3>Localização</h3> -->
-                		<?php echo $address->street ?>, <?php echo $address->number ?><?php echo (($address->complement)?($address->complement.' - '):(' - ')) ?><?php echo $address->neighborhood ?> - <?php echo $address->city ?> - <?php echo $address->state ?><br />
-<!--                 		<b><a href="/contato">Ver mapa</a></b> -->
-<!--                 	</div> -->
-            	<?php }?>
-                </div>
-                <div class="col-md-6">
-                	<div class='address-footer text-center'>
-                		<h3>Redes sociais</h3>
-                		<a href="" class="fab fa-facebook-square"></a>
-                		<a href="" class="fab fa-twitter-square"></a>
-                		<a href="" class="fab fa-whatsapp-square"></a>
-                		<a href="" class="fab fa-telegram"></a>
-                		<a href="" class="fab fa-skype"></a>
-                		<a href="" class="fab fa-google-plus-square"></a>
-                		<a href="" class="fab fa-linkedin"></a>
-                	</div>
-                	<p class="text-muted text-center">&copy; <?php echo date("Y"); ?></p>
-                </div>
-                <div class="col-md-3">
-                	<?php if($address){?>
-<!--                         <div class='address-footer'> -->
-<!--                         	<h3>Contato</h3> -->
-                            Telefone: <?php echo $address->phone ?>
-<!--                             <br /> -->
-                            Email: <?php echo $address->email ?>
-<!--                     	</div> -->
-                    <?php }?>
-                </div>
-            </div>
-        </div>
+<div class="container">
+	<div class="header">
+        <div class='float-left'></div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.inputmask.bundle.min.js"></script>
-    <script type="text/javascript" src="/js/script<?php echo $min?>.js?v=1"></script>
+    <div class="container">
+	<div id='flashMessage' class="flash-bottom-right alert <?php echo $flashClass?>" <?php echo $alertHide?>><?php echo $flashMessage ?></div>
+	<?php if($isLogged){
+		include __DIR__.'/partials/page-config.phtml';
+	}?>
+    <?php $this->content();?>
+    </div>
+    <div class="footer">
+        <footer class="pt-2 pt-md-4 container text-white">
+            <div class="row">
+            </div>
+            <small class="d-block pb-1 text-muted text-center">FUNCATE &copy; <?php echo date("Y"); ?></small>
+        </footer>
+        <div id="back-to-top" class="position-fixed" style="bottom: 50px; right: 25px; display: none"><a href="#" data-tooltip="true" title="Retornar ao Topo da Página." class="btn btn-primary"> <span class="fas fa-arrow-up"></span></a></div>
+    </div>
+</div>
+<?php include __DIR__.'/partials/modals.phtml';?>
 </body>
 </html>

@@ -1,0 +1,19 @@
+<?php
+$entityCount=$this->entityCount;
+$rowsPerPage=$this->rowsPerPage;
+$page=$this->page;
+$url=$this->url;
+$paginationCount=ceil($entityCount/$rowsPerPage);
+if(!$page){
+    $page=1;
+}
+?>
+<nav>
+    <ul class="pagination">
+        <li class="page-item"><a class="page-link<?php $page<2?print " link-disabled":''?>" href="<?php echo $this->basePath().$url ?>?page=<?php echo ($page-1)?>" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>
+        <?php for ($count = 0; $count < $paginationCount; $count++) {?>
+        <li class="page-item<?php (((!$page && $count==0) || ($page==($count+1)))?(print ' active'):(''))?>"><a class="page-link" href="<?php echo $this->basePath().$url ?>?page=<?php echo ($count+1)?>"><?php echo ($count+1)?></a></li>
+        <?php }?>
+        <li class="page-item"><a class="page-link<?php $page==$paginationCount?print " link-disabled":''?>" href="<?php echo $this->basePath().$url ?>?page=<?php echo ($page+1)?>" aria-label="Next"> <span aria-hidden="true">&raquo;</span></a></li>
+    </ul>
+</nav>

@@ -2,6 +2,19 @@
 $message = $this->message;
 if($message){
 	echo $message;
-}else{
-	echo "<div class='error-page'>Ocorreu um erro ao tentar acessar essa página</div>";
-}
+}else{?>
+    <br />
+    <br />
+    <br />
+    <div class="container">
+    <div class="jumbotron m-0">
+    <h1>Erro!</h1>
+    <h2>Desculpe, ocorreu um problema ao tentar acessar essa página.</h2>
+    <br />
+    <a class="btn btn-primary" href="/">Voltar à página inicial</a>
+    </div>
+    </div>
+    <br />
+    <br />
+    <br />
+<?php }?>

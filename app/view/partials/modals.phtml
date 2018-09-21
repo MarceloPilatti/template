@@ -1,0 +1,92 @@
+<div class="modal fade" id="longTextModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div id="longTextModalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label>Deseja prosseguir?</label>
+            </div>
+            <div class="modal-footer">
+                <a id="confirmationModalBtn" class="btn btn-primary" href="">Prosseguir</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div style="margin: auto;width: 60%;padding: 10px;">
+                    <i id='uploadModalLoading' class='fa fa-spinner fa-spin' style='font-size: 15em; display: none;'></i>
+                </div>
+                <form id="formUploadFile" enctype="multipart/form-data">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputFile" id="inputFile" lang="pt-br"> <label id="fileName" class="custom-file-label" for="inputFile"></label>
+                    </div>
+                    <small id="filesCountLabel" class="form-text text-muted"></small> <span id="uploadModalErrorMessage" class="text-danger font-weight-bold"></span> <input type="hidden" name="fileVersion" /> <input type="hidden" name="subprojectId" /> <input type="hidden" name="userId" /> <input type="hidden" name="parentDocumentId" /> <input type="hidden" name="albumId" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a id="uploadModalBtn" class="btn btn-primary" href="">Enviar</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="genericModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div id='genericModalBody' class="modal-body"></div>
+            <div class="modal-footer">
+                <input id='genericModalId' type="hidden" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="inputModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id='formInputModal'>
+                    <input id='input' name="input" type="text" class="form-control" autofocus />
+                    <input id='inputModalId' type="hidden" name="id" />
+                    <span id='inputModalErrorMessage' class="text-danger font-weight-bold"></span>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a id="inputModalBtn" class="btn btn-primary" href="">Prosseguir</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

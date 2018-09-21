@@ -4,11 +4,10 @@ class User{
     private $id;
     private $userName;
     private $password;
-    private $role;
-    
-    
     public static function rules(){
         return [
+            'userName'=>'required',
+            'password'=>'required|password|max:10'
         ];
     }
     public function getAttrs()

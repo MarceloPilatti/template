@@ -5,7 +5,7 @@ class UserDAO extends DAO{
     public function __construct($dBName=null)
     {
         parent::__construct($dBName);
-        $this->entity = "Core\\Acl\\Entity\\User";
+        $this->entity = "App\\Entity\\User";
         $this->tableName = "USER";
     }
 }

@@ -7,7 +7,7 @@ abstract class FlashType{
     const INFO=4;
 }
 abstract class FlashMessage{
-    public static function setMessage($message,$type,$redirectTo=null){
+    public static function setMessage($message,$type,$redirectTo=false){
         if(Session::get('flashMessage'))Session::unset('flashMessage');
         if(Session::get('flashClass'))Session::unset('flashClass');
         $class='';
@@ -28,6 +28,6 @@ abstract class FlashMessage{
         }
         Session::set('flashMessage',$message);
         Session::set('flashClass',$class);
-        if($redirectTo)Router::redirect($redirectTo);
+        if($redirectTo!==false)Router::redirect($redirectTo);
     }
 }

@@ -3,7 +3,7 @@ namespace Core;
 
 abstract class RuleType
 {
-    const REQUIRED='require';
+    const REQUIRED='required';
     const UNIQUE='unique';
     const DEFAULT='default';
     const FOREIGN_KEY='foreign-key';

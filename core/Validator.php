@@ -546,7 +546,7 @@ class Validator
         if(!$data){
             $data='0';
         }
-        if(!is_int($data)){
+        if(!is_numeric($data)){
             $msgError.="Digite somente números.<br />";
         }
         $result['data']=$data;

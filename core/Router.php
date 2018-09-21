@@ -15,10 +15,12 @@ class Router{
         $urlArray=explode('/',$url);
         array_shift($urlArray);
         $urlCount=count($urlArray);
+        $param=null;
         if($urlCount==1){
             $route=$this->getRoute('/'.$urlArray[0]);
         }else if ($urlCount==2){
-            if(method_exists('App\\Controller\\'.ucfirst($urlArray[0]).'Controller',$urlArray[1].'Action')){
+            $cName='App\\Controller\\'.ucfirst($urlArray[0]).'Controller';
+            if(method_exists($cName,$urlArray[1].'Action')){
                 $route=$this->getRoute('/'.$urlArray[0].'/'.$urlArray[1]);
             }else{
                 $param=$urlArray[1];
@@ -60,12 +62,7 @@ class Router{
             $this->showNotFoundError();
         }
         $controller=new $controllerClass();
-        $result=$controller->$action($param);
-        if(is_string($result)){
-            echo $result;
-            exit();
-        }
-        $result->show();
+        $controller->dispatch($controller, $action, $param);
     }
     private function getRoute($route){
         $routes=$this->routes;
@@ -82,6 +79,10 @@ class Router{
             foreach($with as $key=>$value){
                 Session::set($key,$value);
             }
+        }
+        if(!$uri){
+            header("Refresh: 0");
+            exit();
         }
         header('Location: '.$uri);
         exit();
