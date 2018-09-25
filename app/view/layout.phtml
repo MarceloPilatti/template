@@ -39,17 +39,30 @@ if(isset($flashMessage)){
 <script type="text/javascript" src="/js/script<?php echo $min?>.js?v=<?php echo $version?>"></script>
 </head>
 <body>
+<nav id="navbar" class="navbar navbar-dark bg-dark fixed-top navbar-expand-lg">
+	<div class="container">
+    	<a class="navbar-brand" href="#home"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+    	</button>
+    	<div class="collapse navbar-collapse" id="navbarCollapse">
+    		<ul class="nav navbar-nav ml-auto">
+    			<li class="nav-item"><a class="nav-link active" href="">Home</a></li>
+    			<li class="nav-item"><a class="nav-link" href="">Sobre&nbsp;nós</a></li>
+    			<li class="nav-item"><a class="nav-link" href="">Contato</a></li>
+    		</ul>
+		</div>
+    </div>
+</nav>
 <div class="container">
 	<div class="header">
         <div class='float-left'></div>
     </div>
-    <div class="container">
 	<div id='flashMessage' class="flash-bottom-right alert <?php echo $flashClass?>" <?php echo $alertHide?>><?php echo $flashMessage ?></div>
 	<?php if($isLogged){
 		include __DIR__.'/partials/page-config.phtml';
 	}?>
     <?php $this->content();?>
-    </div>
     <div class="footer">
         <footer class="pt-2 pt-md-4 container text-white">
             <div class="row">
