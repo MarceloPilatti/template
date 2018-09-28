@@ -20,8 +20,8 @@ class Social{
     }
     public function setAttrs($values){
         $attrs=$this->getAttrs();
-        foreach ($attrs as $key=>$attr){
-            $value=$values[$key];
+        $attrs=array_keys($attrs);
+        foreach ($attrs as $key){
             if($key!=='id'){
                 $value=$values[$key];
                 $this->$key=$value;

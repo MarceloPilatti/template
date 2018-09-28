@@ -321,7 +321,8 @@ abstract class DAO{
         $values="";
         $tableName=$this->tableName;
         $sql="INSERT INTO ".$tableName." (";
-        foreach ($entities as $key=>$e) {
+        $entities=array_keys($entities);
+        foreach ($entities as $key) {
             $count=0;
             foreach ($columnNames as $count=>$columnName) {
                 if ($key==0) {

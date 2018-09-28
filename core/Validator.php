@@ -57,8 +57,8 @@ class Validator
                 if(!array_key_exists($ruleKey, $formdata) && !$fKEntityId){
                     $isDefault=false;
                     foreach ($rulesArray as $rule){
-                        if(strpos($rule, (RuleType::DEFAULT)!==false || strpos($rule, RuleType::DATE)!==false || strpos($rule, RuleType::DATETIME)!==false) && !$entityId){
-                            $isDefault=true;
+                        $isDefault=strpos($rule, (RuleType::DEFAULT))!==false || strpos($rule, RuleType::DATE)!==false || strpos($rule, RuleType::DATETIME)!==false && !$entityId;
+                        if($isDefault){
                             break;
                         }
                     }
@@ -178,7 +178,7 @@ class Validator
                                     $validExtensions=explode(";",$ruleValue);
                                 }
                                 $files=$data[$ruleKey];
-                                if(!$multipleFile && !$files['name'] && $entityId && $entity->filePath){
+                                if(!$multipleFile && !array_key_exists('name', $files) && $entityId && $entity->filePath){
                                     $entityValues['fileName']=$entity->fileName;
                                     $entityValues['filePath']=$entity->filePath;
                                     break;
@@ -209,9 +209,15 @@ class Validator
                                         $fileExtension=pathinfo($file['name'],PATHINFO_EXTENSION);
                                         $fileName=md5(uniqid(rand(), true).time()).'.'.$fileExtension;
                                         $destFileName=$fullDestPath.$fileName;
-                                        $destThumbName=$fullDestThumbPath.$fileName;
-                                        $imgSize=$entityRule["size"];
+                                        
+                                        $isImage=$entityRule["isImage"];
                                         if($isImage==1){
+                                            $fullDestThumbPath=$fullDestPath.'thumb/';
+                                            if(!is_dir($fullDestThumbPath)){
+                                                mkdir($fullDestThumbPath, 0777, true);
+                                            }
+                                            $destThumbName=$fullDestThumbPath.$fileName;
+                                            $imgSize=$entityRule["size"];
                                             $img = Image::make($tempName);
                                             if($imgSize){
                                                 $imgSize=explode('x', $imgSize);
@@ -391,14 +397,15 @@ class Validator
 
     private static function return_bytes($val)
     {
-        $val = trim($val);
-        $last = strtolower($val[strlen($val)-1]);
+        $val=trim($val);
+        $last=substr($val, -1);
+        $val=substr($val, 0, -1);
         switch ($last) {
-            case 'g':
+            case 'G':
                 $val *= 1024;
-            case 'm':
+            case 'M':
                 $val *= 1024;
-            case 'k':
+            case 'K':
                 $val *= 1024;
         }
         return $val;
