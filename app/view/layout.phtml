@@ -58,7 +58,7 @@ if(isset($flashMessage)){
 	<div class="header">
         <div class='float-left'></div>
     </div>
-	<div id='flashMessage' class="flash-bottom-right alert <?php echo $flashClass?>" <?php echo $alertHide?>><?php echo $flashMessage ?></div>
+    <div id="alertAjax" class="alert alert-dismissable flash-message-bottom"><div id="alertMessage"></div></div>
 	<?php if($isLogged){
 		include __DIR__.'/partials/page-config.phtml';
 	}?>
@@ -73,5 +73,15 @@ if(isset($flashMessage)){
     </div>
 </div>
 <?php include __DIR__.'/partials/modals.phtml';?>
+<div id="sidebar" class="sidebar modal left fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="d-block p-3 bg-light border-bottom">
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

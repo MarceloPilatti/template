@@ -261,26 +261,31 @@ var runMethod=function(method){
 	if (typeof fn === "function") fn();
 }
 
-$('#flashMessage').ready(function(){
-	setTimeout(function() {
-		$('#flashMessage').slideUp('fast');
-	}, 10000);
+$("#alertAjax").ready(function () {
+    setTimeout(function () {
+        $("#alertAjax").slideUp("fast");
+    }, 10000);
 });
-var clearFlashMessage=function(){
-	$('#alert').removeClass('alert-success');
-	$('#alert').removeClass('alert-danger');
-	$('#alert').removeClass('alert-info');
-}
-var showMessage=function(msg,type){
-	$('#alert').show();
-	clearFlashMessage();
-	$('#alert').addClass(type);
-	$('#alertMessage').html(msg);
-	$('#alert').slideDown('fast');
-	setTimeout(function() {
-		$('#alert').slideUp('fast');
-	}, 10000);
-	$('#flashMessage').remove();
+$("#alert").ready(function () {
+    setTimeout(function () {
+        $("#alert").slideUp("fast");
+    }, 10000);
+});
+var clearFlashMessage = function () {
+    $("#alertAjax").removeClass("alert-success");
+    $("#alertAjax").removeClass("alert-danger");
+    $("#alertAjax").removeClass("alert-info");
+};
+var showMessage = function (msg, type) {
+    $("#alertAjax").show();
+    clearFlashMessage();
+    $("#alertAjax").addClass(type);
+    $("#alertMessage").html(msg);
+    $("#alertAjax").slideDown("fast");
+    setTimeout(function () {
+        $("#alertAjax").slideUp("fast");
+    }, 10000);
+    $("#flashMessage").remove();
 };
 var showAjaxSuccessMessage=function(msg){
 	showMessage(msg,'alert-success');
@@ -309,6 +314,9 @@ var slugify=function(input){
 };
 var setSlugify = function(json){
 	$('#slug').val(json.slug);
+};
+var showSideBar=function(){
+    $("#sidebar").modal("show");
 };
 (function() {
 	'use strict';
